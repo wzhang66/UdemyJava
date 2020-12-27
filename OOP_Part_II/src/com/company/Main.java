@@ -3,13 +3,13 @@ package com.company;
 public class Main {
 
     public static void main(String[] args) {
-        Dimensions dimensions = new Dimensions(20,20,5);
-	    Case theCase = new Case("220B" ,"Dell", "24", dimensions);
-	    Monitor theMonitor = new Monitor("27inch Beast", "AOC",28, new Resolution(2540, 1440));
-        Motherboard motherboard = new Motherboard("Z390", "Gigabyte", 4, 6, "v2.44");
+        Printer printer = new Printer(50,true);
+        System.out.println(printer.addToner(50));
+        System.out.println(printer.getPagesPrinted());
+        int pagesPrinted = printer.printPages(4);
+        System.out.println(pagesPrinted + " , " + printer.getPagesPrinted());
+        pagesPrinted = printer.printPages(2);
+        System.out.println(pagesPrinted + " , " + printer.getPagesPrinted());
 
-        PC thePC = new PC(theCase, theMonitor, motherboard);
-
-        thePC.powerUp();
     }
 }
