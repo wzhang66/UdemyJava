@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class SortedArray {
@@ -8,16 +9,10 @@ public class SortedArray {
     public static int[] getIntegers(int number){
         System.out.println("Enter " + number + " integer values.\r");
         int[] values = new int[number];
-        String message = "[";
         for(int i = 0; i<values.length; i++) {
             values[i] = scanner.nextInt();
-            message = message + values[i];
-            if(i<values.length-1){
-                message += ", ";
-            }
         }
-        message += "]";
-        System.out.println(message);
+        System.out.println(Arrays.toString(values));
         printArray(values);
         return values;
     }
