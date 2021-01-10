@@ -27,6 +27,7 @@ public class Album {
             playList.add(this.songs.get(songNum-1));
             return true;
         }
+        System.out.println("This album does not have a track " + songNum);
         return false;
     }
 
@@ -40,10 +41,9 @@ public class Album {
     }
 
     private Song findSong(String title){
-        for(int i=0; i<this.songs.size(); i++){
-            Song singleSong = songs.get(i);
-            if(singleSong.getTitle().equals(title)){
-                return singleSong;
+        for(Song checkSong: this.songs){
+            if(checkSong.getTitle().equals(title)){
+                return checkSong;
             }
         }
         return null;
