@@ -36,8 +36,6 @@ public class Main {
                 System.out.println(title + " was clicked");
             }
         });
-
-        btnPrint.setOnClickListener(new ClickListener());
         listen();
     }
 
