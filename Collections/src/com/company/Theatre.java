@@ -6,18 +6,22 @@ public class Theatre {
     private final String theatreName;
     private List<Seat> seats = new ArrayList<>();
 
-    static final Comparator<Seat> PRICE_OREDER = new Comparator<Seat>() {
-        @Override
-        public int compare(Seat s1, Seat s2) {
-            if(s1.getPrice() < s2.getPrice()){
-                return -1;
-            } else if (s1.getPrice() > s2.getPrice()){
-                return 1;
-            } else {
-                return 0;
+    static final Comparator<Seat> PRICE_OREDER;
+
+    static {
+        PRICE_OREDER = new Comparator<Seat>() {
+            @Override
+            public int compare(Seat s1, Seat s2) {
+                if (s1.getPrice() < s2.getPrice()) {
+                    return -1;
+                } else if (s1.getPrice() > s2.getPrice()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
             }
-        }
-    };
+        };
+    }
 
 
     public Theatre(String theatreName, int numRows, int seatsPerRow) {
