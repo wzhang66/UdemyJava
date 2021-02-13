@@ -39,10 +39,37 @@ public class SetMain {
         Set<String> nature = new HashSet<>();
         Set<String> divine = new HashSet<>();
         String[] arrayWord = ("All is becoming good").split(" ");
-        String[] arrayDivine = ("To my best friend").split(" ");
+        String[] arrayDivine = ("To my is best friend").split(" ");
         nature.addAll(Arrays.asList(arrayWord));
         divine.addAll(Arrays.asList(arrayDivine));
 
-        
+        System.out.println("nature - divine: ");
+        Set<String> diff1 = new HashSet<>(nature);
+        diff1.removeAll(divine);
+        printSet(diff1);
+
+        System.out.println("diveine - nature: ");
+        Set<String> diff2 = new HashSet<>(divine);
+        diff2.removeAll(nature);
+        printSet(diff2);
+
+        Set<String> unionTest = new HashSet<>(nature);
+        unionTest.addAll(divine);
+        Set<String> intersectionTest = new HashSet<>(nature);
+        intersectionTest.retainAll(divine);
+        System.out.println("Symmetric difference");
+        unionTest.removeAll(intersectionTest);
+        printSet(unionTest);
+
+
+
+    }
+
+    private static void printSet(Set<String> set){
+        System.out.println("\t");
+        for (String s: set){
+            System.out.println(s + " ");
+        }
+        System.out.println();
     }
 }
