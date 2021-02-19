@@ -40,6 +40,7 @@ public class StockList {
     }
 
     public Map<String, StockItem> Items(){
+        // Only the collections is unmodifiable but the item is modifiable
         return Collections.unmodifiableMap(list);
     }
 

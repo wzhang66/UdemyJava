@@ -18,8 +18,36 @@ public class Main {
         stockList.addStock(temp);
         temp = new StockItem("door", 4.1, 30);
         stockList.addStock(temp);
+        temp = new StockItem("door", 4.5, 3);
+        stockList.addStock(temp);
 
         System.out.println(stockList);
+        Basket weiweiBasket = new Basket("Weiwei");
+        sellItem(weiweiBasket, "car", 1);
+        System.out.println(weiweiBasket);
+        sellItem(weiweiBasket, "car", 1);
+        System.out.println(weiweiBasket);
+        sellItem(weiweiBasket, "car", 1);
+        System.out.println(weiweiBasket);
 
+
+        stockList.Items().get("car").adjustStock(2000);
+        stockList.get("car").adjustStock(-199);
+        System.out.println(stockList);
+
+
+    }
+
+    public static int sellItem(Basket basket, String item, int quantity){
+        StockItem stockItem = stockList.get(item);
+        if(stockItem == null){
+            System.out.println("We don't sell " + item);
+            return 0;
+        }
+        if(stockList.sellStock(item, quantity) != 0){
+            basket.addToBasket(stockItem, quantity);
+            return quantity;
+        }
+        return 0;
     }
 }
