@@ -19,7 +19,6 @@ public class StockList {
             if(inStock != item){
                 item.adjustStock(inStock.quantityInStock());
             }
-
             list.put(item.getName(), item);
             return item.quantityInStock();
         }
@@ -27,10 +26,31 @@ public class StockList {
     }
 
     public int sellStock(String item, int quantity){
-        StockItem inStock = list.getOrDefault(item, null);
-        if((inStock != null) && (inStock.quantityInStock() >= quantity) && (quantity >0) ){
-            inStock.adjustStock(-quantity);
-            return quantity;
+//        StockItem inStock = list.getOrDefault(item, null);
+//        if((inStock != null) && (inStock.quantityInStock() >= quantity) && (quantity >0) ){
+//            inStock.adjustStock(-quantity);
+//            return quantity;
+//        }
+//        return 0;
+        StockItem stockItem = list.get(item);
+        if(stockItem != null && quantity>0){
+            return stockItem.finalizeStock(quantity);
+        }
+        return 0;
+    }
+
+    public int reserveStock(String item, int quantity){
+        StockItem stockItem = list.get(item);
+        if(stockItem != null && quantity>0){
+            return stockItem.reserveStock(quantity);
+        }
+        return 0;
+    }
+
+    public int unreserveStock(String item, int quantity){
+        StockItem stockItem = list.get(item);
+        if(stockItem != null && quantity>0){
+            return stockItem.unreserveStock(quantity);
         }
         return 0;
     }

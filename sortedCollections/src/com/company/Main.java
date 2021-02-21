@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Map;
+
 public class Main {
     private static StockList stockList = new StockList();
 
@@ -23,17 +25,26 @@ public class Main {
 
         System.out.println(stockList);
         Basket weiweiBasket = new Basket("Weiwei");
-        sellItem(weiweiBasket, "car", 1);
-        System.out.println(weiweiBasket);
-        sellItem(weiweiBasket, "car", 1);
-        System.out.println(weiweiBasket);
+
         sellItem(weiweiBasket, "car", 1);
         System.out.println(weiweiBasket);
 
+        sellItem(weiweiBasket, "car", 1);
+        System.out.println(weiweiBasket);
 
-        stockList.Items().get("car").adjustStock(2000);
-        stockList.get("car").adjustStock(-199);
-        System.out.println(stockList);
+        sellItem(weiweiBasket, "spannner", 1);
+//        System.out.println(weiweiBasket);
+
+        Basket basket = new Basket("customer");
+        sellItem(basket, "cup", 1);
+        sellItem(basket, "door", 1);
+
+        removeItem(basket, "cup", 1);
+
+
+//        stockList.Items().get("car").adjustStock(2000);
+//        stockList.get("car").adjustStock(-199);
+//        System.out.println(stockList);
 
 
     }
@@ -44,10 +55,30 @@ public class Main {
             System.out.println("We don't sell " + item);
             return 0;
         }
-        if(stockList.sellStock(item, quantity) != 0){
-            basket.addToBasket(stockItem, quantity);
-            return quantity;
+        if(stockList.reserveStock(item, quantity) != 0){
+            return basket.addToBasket(stockItem, quantity);
         }
         return 0;
+    }
+
+    public static int removeItem(Basket basket, String item, int quantity){
+        StockItem stockItem = stockList.get(item);
+        if(stockItem == null){
+            System.out.println("We don't sell " + item);
+            return 0;
+        }
+        if(basket.removeFromBsket(stockItem, quantity) == quantity){
+            return stockList.unreserveStock(item, quantity);
+        }
+        return 0;
+    }
+
+    public static void checkOut(Basket basket){
+        for(Map.Entry<StockItem, Integer> item: basket.Items().entrySet()){
+            // Check out the items
+            stockList.sellStock(item.getKey().getName(), item.getValue());
+        }
+        // Clear the basket after check out
+        basket.clearBasket();
     }
 }
