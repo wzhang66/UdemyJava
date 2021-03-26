@@ -5,39 +5,23 @@ import com.weiwei.todolist.datamodel.TodoItem;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextArea;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 
-import java.time.LocalDate;
-import java.time.Month;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Controller {
     private List<TodoItem> todoItems;
     @FXML private ListView<TodoItem> todoListView;
     @FXML private TextArea itemDetailsTextArea;
     @FXML private Label deadlineLabel;
+    @FXML private BorderPane mainBorderPane;
 
     public void initialize(){
-//        Comment out after overriding init() in the main
-//        TodoItem item1 = new TodoItem("Shopping", "Go to shoppers", LocalDate.of(2021, Month.MARCH, 15));
-//        TodoItem item2 = new TodoItem("working", "Go to work", LocalDate.of(2021, Month.MARCH, 15));
-//        TodoItem item3 = new TodoItem("orthodontics", "Go to Hamilton", LocalDate.of(2021, Month.MARCH, 18));
-//        TodoItem item4 = new TodoItem("Sleep", "Go to bed", LocalDate.of(2021, Month.MARCH, 14));
-//        TodoItem item5 = new TodoItem("Laundry", "Go to wash cloth", LocalDate.of(2021, Month.MARCH, 14));
-//        todoItems = new ArrayList<TodoItem>();
-//        todoItems.add(item1);
-//        todoItems.add(item2);
-//        todoItems.add(item3);
-//        todoItems.add(item4);
-//        todoItems.add(item5);
-//
-//        TodoData.getInstance().setTodoItems(todoItems);
-
         // add event listener to the click
         todoListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TodoItem>() {
             @Override
@@ -54,20 +38,40 @@ public class Controller {
         todoListView.getItems().setAll(TodoData.getInstance().getTodoItems());
         todoListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         todoListView.getSelectionModel().selectFirst();
-
     }
 
-//    @FXML
-//    public void handleClickListView(){
-//        TodoItem item = todoListView.getSelectionModel().getSelectedItem();
-////        System.out.println(item.getDetails());
-////        StringBuilder sb = new StringBuilder(item.getDetails());
-////        sb.append("\n\n\n\n");
-////        sb.append("Due: ");
-////        sb.append(item.getDeadLine().toString());
-//        itemDetailsTextArea.setText(item.getDetails());
-//        deadlineLabel.setText(item.getDeadLine().toString());
-//    }
+    @FXML
+    public void showNewItemDialog(){
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainBorderPane.getScene().getWindow());
+        dialog.setTitle("Add New Todo Item");
+        dialog.setHeaderText("Use this dialog to add new todo item");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("todoItemDialog.fxml"));
+        try {
+//            Parent root = FXMLLoader.load(getClass().getResource("todoItemDialog.fxml"));
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+        } catch (IOException e){
+            System.out.println("Couldn't load the dialog");
+            e.printStackTrace();
+            return;
+        }
+
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if(result.isPresent() && result.get()==ButtonType.OK){
+            DialogController controller = fxmlLoader.getController();
+            TodoItem newItem = controller.processResults();
+
+            todoListView.getItems().setAll(TodoData.getInstance().getTodoItems());
+            todoListView.getSelectionModel().select(newItem);
+            System.out.println("OK");
+        } else {
+            System.out.println("Cancel");
+        }
+    }
 
     @FXML
     public void handleEnterKey(){
