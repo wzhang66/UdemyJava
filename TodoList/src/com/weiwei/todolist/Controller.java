@@ -23,9 +23,11 @@ public class Controller {
     @FXML private TextArea itemDetailsTextArea;
     @FXML private Label deadlineLabel;
     @FXML private BorderPane mainBorderPane;
+    @FXML private ContextMenu listContextMenu;
 
     public void initialize(){
         // add event listener to the click
+        listContextMenu = new ContextMenu();
         todoListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TodoItem>() {
             @Override
             public void changed(ObservableValue<? extends TodoItem> observableValue, TodoItem todoItem, TodoItem t1) {
