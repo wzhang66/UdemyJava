@@ -1,8 +1,0 @@
-working	Go to work	15-03-2021
-Sleep	Go to bed	14-03-2021
-Laundry	Go to wash cloth	14-03-2021
-dental	Thursday afternoon 5pm	25-03-2021
-asd	dddd	03-03-2021
-Testing	Save data for future	25-03-2021
-testing2	hello world	30-03-2021
-Tormorow	af	31-03-2021
