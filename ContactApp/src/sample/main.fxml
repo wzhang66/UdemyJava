@@ -5,7 +5,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
-<BorderPane fx:controller="sample.Controller"
+<BorderPane fx:id="mainPanel" fx:controller="sample.Controller"
             xmlns:fx="http://javafx.com/fxml">
     <top>
         <MenuBar>
@@ -34,7 +34,7 @@
                 </TableColumn>
                 <TableColumn text="Phone Number">
                     <cellValueFactory>
-                        <PropertyValueFactory property="Phone Number" />
+                        <PropertyValueFactory property="PhoneNumber" />
                     </cellValueFactory>
                 </TableColumn>
                 <TableColumn text="notes">

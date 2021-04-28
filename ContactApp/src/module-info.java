@@ -4,4 +4,5 @@ module ContactApp {
     requires java.xml;
 
     opens sample;
+    opens sample.datamodel;
 }
