@@ -1,7 +1,6 @@
 package com.company;
 
-import static com.company.ThreadColor.ANSI_CYAN;
-import static com.company.ThreadColor.ANSI_PURPLE;
+import static com.company.ThreadColor.*;
 
 public class Main {
 
@@ -23,8 +22,23 @@ public class Main {
         }.start();
 
         // Create a thread via a runnable interface
-        Thread myRunThread = new Thread(new MyRunnable());
+        Thread myRunThread = new Thread(new MyRunnable()){
+            @Override
+            public void run() {
+                super.run();
+                // Use the join method to let the anotherThread run first and freeze
+                try{
+                    anotherThread.join();
+                    System.out.println(ANSI_RED + "Another Terminated and I am running again");
+                } catch(InterruptedException e){
+                    System.out.println(ANSI_RED + "Could not wait after all, interrupted");
+                }
+
+            }
+        };
         myRunThread.start();
+
+
 
         // Runnable is more convenient and flexible for developer
 
