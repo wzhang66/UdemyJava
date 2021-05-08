@@ -49,10 +49,13 @@ class MyProducer implements Runnable {
 //                }
 
                 // using lock object to sychronizing parts of the execution codes
+                // Recommended format using the lock object by using try ... finally ... block
                 bufferLock.lock();
-                buffer.add(num);
-                bufferLock.unlock();
-
+                try {
+                    buffer.add(num);
+                } finally {
+                    bufferLock.unlock();
+                }
                 Thread.sleep(random.nextInt(1000));
             } catch (InterruptedException e){
                 System.out.println("Producer was interrupted");
@@ -63,8 +66,11 @@ class MyProducer implements Runnable {
 //            buffer.add("EOF");
 //        }
         bufferLock.lock();
-        buffer.add("EOF");
-        bufferLock.unlock();
+        try {
+            buffer.add("EOF");
+        } finally {
+            bufferLock.unlock();
+        }
     }
 }
 
@@ -97,21 +103,23 @@ class MyConsumer implements Runnable{
 
 //            Using lock object instead of synchronized block to synchronization
             bufferLock.lock();
-            if(buffer.isEmpty()){
-                // release the lock to prevent infinite looping due to the holding of the lock
+            try{
+                if(buffer.isEmpty()){
+                    // release the lock to prevent infinite looping due to the holding of the lock
+//                    bufferLock.unlock();
+                    continue;
+                }
+                // The method will not remove the EOF string, otherwise others consumers thread will loop indefinitely
+                if(buffer.get(0).equals(EOF)){
+                    System.out.println(color + "Existing");
+//                    bufferLock.unlock();
+                    break;
+                } else {
+                    System.out.println(color + "Removed " + buffer.remove(0));
+                }
+            } finally {
                 bufferLock.unlock();
-                continue;
             }
-            // The method will not remove the EOF string, otherwise others consumers thread will loop indefinitely
-            if(buffer.get(0).equals(EOF)){
-                System.out.println(color + "Existing");
-                bufferLock.unlock();
-                break;
-            } else {
-                System.out.println(color + "Removed " + buffer.remove(0));
-
-            }
-            bufferLock.unlock();
         }
     }
 }
