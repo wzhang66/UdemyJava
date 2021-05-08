@@ -86,6 +86,8 @@ class MyConsumer implements Runnable{
     }
 
     public void run(){
+        int counter = 0;
+
         while (true){
             // Check whether there are something to read, looping to check until the buffer is not empty
 //            synchronized (buffer) {
@@ -102,23 +104,28 @@ class MyConsumer implements Runnable{
 //            }
 
 //            Using lock object instead of synchronized block to synchronization
-            bufferLock.lock();
-            try{
-                if(buffer.isEmpty()){
-                    // release the lock to prevent infinite looping due to the holding of the lock
+            if(bufferLock.tryLock()){
+                try{
+                    if(buffer.isEmpty()){
+                        // release the lock to prevent infinite looping due to the holding of the lock
 //                    bufferLock.unlock();
-                    continue;
-                }
-                // The method will not remove the EOF string, otherwise others consumers thread will loop indefinitely
-                if(buffer.get(0).equals(EOF)){
-                    System.out.println(color + "Existing");
+                        continue;
+                    }
+                    System.out.println(color + "The counter = " + counter);
+                    counter = 0;
+                    // The method will not remove the EOF string, otherwise others consumers thread will loop indefinitely
+                    if(buffer.get(0).equals(EOF)){
+                        System.out.println(color + "Existing");
 //                    bufferLock.unlock();
-                    break;
-                } else {
-                    System.out.println(color + "Removed " + buffer.remove(0));
+                        break;
+                    } else {
+                        System.out.println(color + "Removed " + buffer.remove(0));
+                    }
+                } finally {
+                    bufferLock.unlock();
                 }
-            } finally {
-                bufferLock.unlock();
+            } else {
+                counter++;
             }
         }
     }
