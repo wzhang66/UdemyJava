@@ -3,6 +3,7 @@ package com.company;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -15,13 +16,37 @@ public class Main {
         List<String> buffer = new ArrayList<String>();
         // initialize the lock object to be shared with producer and consumer for them to competing for the same lock to prevent the thread interference.
         ReentrantLock bufferLock = new ReentrantLock();
+
+        // Use thread pool to manage three threads
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+
         MyProducer producer = new MyProducer(buffer, ThreadColor.ANSI_RED, bufferLock);
         MyConsumer consumer1 = new MyConsumer(buffer, ThreadColor.ANSI_GREEN, bufferLock);
         MyConsumer consumer2 = new MyConsumer(buffer, ThreadColor.ANSI_BLUE, bufferLock);
-        new Thread(producer).start();
+
         // Note: arraylist is not thread safe, need to suspend one thread before the other thread finish its operation on the arraylist
-        new Thread(consumer1).start();
-        new Thread(consumer2).start();
+
+        executorService.execute(producer);
+        executorService.execute(consumer1);
+        executorService.execute(consumer2);
+        // shutdown in the orderly format
+
+        Future<String> future = executorService.submit(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                System.out.println(ThreadColor.ANSI_CYAN + "I'm being printed for the Callable class");
+                return "This is the callable results";
+            }
+        });
+        try {
+            System.out.println(future.get());
+        } catch (ExecutionException e) {
+            System.out.println("Something went wrong");
+        } catch (InterruptedException e){
+            System.out.println("Thread runing the task was interrupted");
+        }
+
+        executorService.shutdown();
     }
 }
 
